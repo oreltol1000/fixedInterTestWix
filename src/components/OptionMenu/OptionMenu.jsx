@@ -7,7 +7,11 @@ const OptionMenu = ({ allData, menuNode, setMenuData, setOpenOptionsMenu }) => {
   const [openInputEdit, setOpenInputEdit] = useState(false);
   const [openInputAdd, setOpenInputAdd] = useState(false);
 
-  const deleteHandler = () => {};
+  const deleteHandler = () => {
+    let newMenuData = findNodeAndChild(allData, menuNode, null, "delete");
+    setMenuData(newMenuData);
+    setOpenOptionsMenu(false);
+  };
   const handleAdd = (eventId, value) => {
     if (eventId === "Enter") {
       let newMenuData = findNodeAndChild(allData, menuNode, value, "add");
@@ -26,8 +30,10 @@ const OptionMenu = ({ allData, menuNode, setMenuData, setOpenOptionsMenu }) => {
 
   return (
     <div className="option-menu">
+      <h5>for check myself:{menuNode.name}</h5>
+      {/* delete */}
       <div className="option-block">
-        <span onClick={() => deleteHandler()}>Delete</span>
+        <span onClick={deleteHandler}>Delete</span>
       </div>
       {/* edit */}
       <div className="option-block">

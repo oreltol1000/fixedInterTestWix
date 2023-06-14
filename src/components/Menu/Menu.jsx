@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 const Menu = () => {
   const [menuData, setMenuData] = useState(null);
+  const [openOptionsMenu, setOpenOptionsMenu] = useState(null);
 
   useEffect(() => {
     setMenuData(getMenu());
@@ -18,6 +19,8 @@ const Menu = () => {
     <div className="menu">
       <h1>Menu test</h1>
       <DynamicMenu
+        openOptionsMenu={openOptionsMenu}
+        setOpenOptionsMenu={setOpenOptionsMenu}
         allData={menuData}
         menuData={menuData}
         setMenuData={setMenuData}

@@ -11,21 +11,37 @@ const getSimpleNode = (newNodeName) => {
     children: [],
   };
 };
-export const findNodeAndChild = (menuOldData, fatherNode, newNode, action) => {
+export const findNodeAndChild = (menuOldData, currentNode, newNode, action) => {
   let copyMenuOldData = JSON.parse(JSON.stringify(menuOldData));
-  findNodeAndChildHelper(copyMenuOldData, fatherNode, newNode, action);
-  // setMenu(copyMenuOldData);
+  findNodeAndChildHelper({
+    menuOldData: copyMenuOldData,
+    currentNode,
+    newNode,
+    action,
+  });
   return copyMenuOldData;
 };
 
-const findNodeAndChildHelper = (menuOldData, fatherNode, newNode, action) => {
+const findNodeAndChildHelper = ({
+  menuOldData,
+  currentNode,
+  newNode,
+  action,
+}) => {
   for (let index = 0; index < menuOldData.length; index++) {
-    if (menuOldData[index].id === fatherNode.id) {
-      console.log("action", action);
-      if (action === ACTIONS.delete) {
-        menuOldData.splice(index, 1);
-        return;
-      }
+    //delete
+    if (
+      action === ACTIONS.delete &&
+      menuOldData[index].children.filter((child) => child.id === currentNode.id)
+        .length > 0
+    ) {
+      menuOldData[index].children = menuOldData[index].children.filter(
+        (child) => child.id !== currentNode.id
+      );
+      return;
+    }
+    // add or edit
+    if (menuOldData[index].id === currentNode.id) {
       if (action === ACTIONS.edit) {
         menuOldData[index].name = newNode;
         return;
@@ -36,13 +52,15 @@ const findNodeAndChildHelper = (menuOldData, fatherNode, newNode, action) => {
       }
       return;
     }
+    //deeper
     if (menuOldData[index].children) {
       for (let i = 0; i < menuOldData[index].children.length; i++) {
-        findNodeAndChildHelper(
-          [menuOldData[index].children[i]],
-          fatherNode,
-          newNode
-        );
+        findNodeAndChildHelper({
+          menuOldData: [menuOldData[index].children[i]],
+          currentNode,
+          newNode,
+          action,
+        });
       }
     }
   }

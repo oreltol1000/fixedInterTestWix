@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import OptionMenu from "../OptionMenu/OptionMenu";
 
-const DynamicMenu = ({ allData, menuData, setMenuData }) => {
+const DynamicMenu = ({
+  allData,
+  menuData,
+  setMenuData,
+  openOptionsMenu,
+  setOpenOptionsMenu,
+}) => {
   const [openSubMenu, setOpenSubMenu] = useState(false);
-  const [openOptionsMenu, setOpenOptionsMenu] = useState(false);
-  console.log("alll", allData);
+
   const fatherMenu = () => {
     return menuData.map((item) => {
       return (
@@ -13,19 +18,21 @@ const DynamicMenu = ({ allData, menuData, setMenuData }) => {
             onClick={() => setOpenSubMenu(true)}
             onContextMenu={(e) => {
               e.preventDefault();
-              setOpenOptionsMenu(true);
+              setOpenOptionsMenu(item.id);
             }}
           >
             {item.name}
           </h1>
           {openSubMenu && item.children.length > 0 && (
             <DynamicMenu
+              openOptionsMenu={openOptionsMenu}
+              setOpenOptionsMenu={setOpenOptionsMenu}
               allData={allData}
               menuData={item.children}
               setMenuData={setMenuData}
             />
           )}
-          {openOptionsMenu && (
+          {openOptionsMenu === item.id && (
             <OptionMenu
               allData={allData}
               menuNode={item}
